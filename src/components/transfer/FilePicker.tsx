@@ -9,6 +9,7 @@ interface FilePickerProps {
 
 export function FilePicker({ onSend, sendingFiles }: FilePickerProps) {
   const [file, setFile] = useState<File[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -32,7 +33,44 @@ export function FilePicker({ onSend, sendingFiles }: FilePickerProps) {
 
   return (
     <div>
-      <input type="file" multiple onChange={handleChange} />
+      <label
+        className={`block cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition-all
+            ${isDragging ? "border-blue-400 bg-blue-500/20 scale-[1.01]" : "border-blue-500 bg-blue-900/15"}`}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+        onDragLeave={() => {
+          setIsDragging(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+
+          setFile(Array.from(e.dataTransfer.files));
+        }}>
+        {isDragging ? (
+          <div className="text-blue-400">
+            <p className="text-lg font-semibold">Drop your files here</p>
+            <p className="mt-1 text-sm text-blue-300">Release to add files</p>
+          </div>
+        ) : (
+          <div>
+            <p className="font-medium">Drag & drop your files here</p>
+            <p className="mt-1 text-sm text-zinc-400">or click to pick files</p>
+          </div>
+        )}
+
+        <input
+          type="file"
+          multiple
+          onChange={handleChange}
+          className="hidden w-full h-full"
+        />
+      </label>
 
       {file.length > 0 && (
         <div>

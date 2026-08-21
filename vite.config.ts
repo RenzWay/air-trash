@@ -9,18 +9,4 @@ export default defineConfig({
   server: {
     allowedHosts: true,
   },
-  // build: {
-  //   rollupOptions: {
-  //     output: {
-  //       entryFileNames: "static/app.js",
-  //       assetFileNames: (assetInfo) => {
-  //         if (assetInfo.name?.endsWith(".css")) {
-  //           return "static/app.css";
-  //         }
-
-  //         return "static/[name][extname]";
-  //       },
-  //     },
-  //   },
-  // },
 });

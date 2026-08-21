@@ -51,7 +51,7 @@ export default function HomePage() {
   };
 
   return (
-    <section className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center justify-center p-4">
+    <section className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
         {/* Header */}
         <header className="flex items-center justify-between pb-6 border-b border-zinc-800">
@@ -68,7 +68,7 @@ export default function HomePage() {
         {status === "connected" ? (
           <div className="py-6 space-y-4">
             <div className="p-4 bg-zinc-800/50 rounded-xl border border-zinc-700/50 text-center">
-              <p className="text-sm text-zinc-400">Siap Mengirim File</p>
+              <p className="text-sm text-zinc-400">Ready to send File</p>
             </div>
             <FilePicker onSend={sendFile} sendingFiles={sendingFiles} />
           </div>
@@ -122,11 +122,11 @@ export default function HomePage() {
                       placeholder="Contoh: 8KQ4XM"
                       value={tokenInput}
                       onChange={(e) => setTokenInput(e.target.value)}
-                      className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 font-mono text-center text-lg uppercase tracking-wider focus:outline-none focus:border-blue-500 transition-all"
+                      className="min-w-0 flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 font-mono text-center text-lg uppercase tracking-wider focus:outline-none focus:border-blue-500 transition-all"
                     />
                     <button
                       onClick={handleConnect}
-                      className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 rounded-xl transition-all">
+                      className="shrink-0 bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 rounded-xl transition-all">
                       Connect
                     </button>
                   </div>
@@ -155,12 +155,12 @@ export default function HomePage() {
             <div className="w-full max-w-sm bg-zinc-900 rounded-2xl p-4 space-y-4 border border-zinc-800">
               <div className="flex justify-between items-center">
                 <h3 className="text-sm font-semibold text-zinc-200">
-                  Arahkan Kamera ke QR Code
+                  Point Your Camera at the QR Code
                 </h3>
                 <button
                   onClick={() => setScanning(false)}
                   className="text-zinc-500 hover:text-white text-sm">
-                  Tutup
+                  Close
                 </button>
               </div>
               <div className="overflow-hidden rounded-xl">

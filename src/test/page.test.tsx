@@ -1,81 +1,73 @@
-import { useCallback, useState } from "react";
-import { QrScanner } from "../components/transfer/QrScanner";
-import { TransferQr } from "../components/transfer/TransferQr";
+import { useState, useCallback } from "react";
 import { usePeer } from "../hooks/usePeer";
-import { FilePicker } from "../components/transfer/FilePicker";
 
-function App() {
+export default function TestPage() {
   const { peerId, status, session, connect, sendFile, sendingFiles } =
     usePeer();
-
   const [scanning, setScanning] = useState(false);
   const [tokenInput, setTokenInput] = useState("");
+  const [activeTab, setActiveTab] = useState<"send" | "receive">("send");
 
   const handleConnect = () => {
     const token = tokenInput.trim().toUpperCase();
-
     if (!token) return;
     connect(token);
   };
 
   const handleScan = useCallback(
     (data: string) => {
-      console.log("🔥 QR DATA:", data);
-
-      const peerId = data.trim();
-
-      console.log("🔥 CONNECTING:", peerId);
-
-      connect(peerId);
+      connect(data.trim());
       setScanning(false);
     },
     [connect],
   );
 
+  const getStatusBadge = () => {
+    switch (status) {
+      case "connected":
+        return (
+          <span className="px-3 py-1 bg-green-500/10 text-green-500 rounded-full text-xs font-semibold flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />{" "}
+            Connected
+          </span>
+        );
+      case "connecting":
+        return (
+          <span className="px-3 py-1 bg-yellow-500/10 text-yellow-500 rounded-full text-xs font-semibold flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-yellow-500 animate-ping" />{" "}
+            Connecting...
+          </span>
+        );
+      default:
+        return (
+          <span className="px-3 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-semibold">
+            Offline
+          </span>
+        );
+    }
+  };
+
   return (
-    <main>
-      <h1>AirTrash</h1>
+    <>
+      <header className="border-b border-zinc-800">
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-wider">
+              AirTrash<span className="text-blue-500">.</span>
+            </h1>
 
-      <p>Status: {status}</p>
+            <p className="text-xs text-zinc-400">P2P Instant File Transfer</p>
+          </div>
 
-      {/* SENDER */}
-      {session && (
-        <>
-          <h3>My Token</h3>
-          <h1>{peerId}</h1>
+          {getStatusBadge()}
+        </div>
+      </header>
 
-          <TransferQr session={session} />
-        </>
-      )}
+      <main className="mx-auto w-full max-w-4xl px-4 py-8">
+        {/* content kamu */}
+      </main>
 
-      <hr />
-
-      {/* RECEIVER */}
-      <h3>Connect with Token</h3>
-
-      <input
-        type="text"
-        placeholder="Contoh: 8KQ4XM"
-        value={tokenInput}
-        onChange={(e) => setTokenInput(e.target.value)}
-      />
-
-      <button onClick={handleConnect}>Connect</button>
-
-      <hr />
-      {status === "connected" && (
-        <>
-          <h2>Connected</h2>
-
-          <FilePicker onSend={sendFile} sendingFiles={sendingFiles} />
-        </>
-      )}
-
-      <button onClick={() => setScanning(true)}>Scan QR</button>
-
-      {scanning && <QrScanner onScan={handleScan} />}
-    </main>
+      {scanning && <div className="fixed inset-0 z-50">{/* QR Scanner */}</div>}
+    </>
   );
 }
-
-export default App;
