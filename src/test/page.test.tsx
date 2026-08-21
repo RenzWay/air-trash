@@ -1,26 +1,7 @@
-import { useState, useCallback } from "react";
 import { usePeer } from "../hooks/usePeer";
 
 export default function TestPage() {
-  const { peerId, status, session, connect, sendFile, sendingFiles } =
-    usePeer();
-  const [scanning, setScanning] = useState(false);
-  const [tokenInput, setTokenInput] = useState("");
-  const [activeTab, setActiveTab] = useState<"send" | "receive">("send");
-
-  const handleConnect = () => {
-    const token = tokenInput.trim().toUpperCase();
-    if (!token) return;
-    connect(token);
-  };
-
-  const handleScan = useCallback(
-    (data: string) => {
-      connect(data.trim());
-      setScanning(false);
-    },
-    [connect],
-  );
+  const { status } = usePeer();
 
   const getStatusBadge = () => {
     switch (status) {
@@ -66,8 +47,6 @@ export default function TestPage() {
       <main className="mx-auto w-full max-w-4xl px-4 py-8">
         {/* content kamu */}
       </main>
-
-      {scanning && <div className="fixed inset-0 z-50">{/* QR Scanner */}</div>}
     </>
   );
 }
