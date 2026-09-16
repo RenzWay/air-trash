@@ -1,17 +1,33 @@
 import { IoSend } from "react-icons/io5";
 import { ClipboardCardPicker } from "./ClipboardCardPicker";
 import { useClipboard } from "../../hooks/useClipboard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { ReceivedClipboard } from "../../hooks/usePeer";
 
-export function ClipboardPicker() {
+interface ClipboardPickerProps {
+  onSend: (content: string) => void;
+  receivedClipboard: ReceivedClipboard | null;
+}
+
+export function ClipboardPicker({
+  onSend,
+  receivedClipboard,
+}: ClipboardPickerProps) {
   const { items, add, copy, remove, clearAll } = useClipboard();
   const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (receivedClipboard) {
+      add(receivedClipboard.content);
+    }
+  }, [add, receivedClipboard]);
 
   const handleAdd = () => {
     const text = content.trim();
     if (!text) return;
 
     add(text);
+    onSend(text);
     setContent("");
   };
   return (

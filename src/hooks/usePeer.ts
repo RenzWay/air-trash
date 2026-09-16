@@ -15,6 +15,11 @@ export interface SendingFile {
   status: "queued" | "sending" | "completed" | "failed";
 }
 
+export interface ReceivedClipboard {
+  id: string;
+  content: string;
+}
+
 export function usePeer() {
   const serviceRef = useRef<PeerService | null>(null);
   const TransferServiceRef = useRef<TransferService | null>(null);
@@ -26,6 +31,8 @@ export function usePeer() {
   const [status, setStatus] = useState("creating");
   const [session, setSession] = useState<TransferSession | null>(null);
   const [sendingFiles, setSendingFiles] = useState<SendingFile[]>([]);
+  const [receivedClipboard, setReceivedClipboard] =
+    useState<ReceivedClipboard | null>(null);
 
   /*
    * Semua connection masuk ke sini.
@@ -49,6 +56,24 @@ export function usePeer() {
     });
 
     connection.on("data", (data) => {
+      const message = data as {
+        type?: unknown;
+        id?: unknown;
+        content?: unknown;
+      };
+
+      if (
+        message.type === "clipboard" &&
+        typeof message.id === "string" &&
+        typeof message.content === "string"
+      ) {
+        setReceivedClipboard({
+          id: message.id,
+          content: message.content,
+        });
+        return;
+      }
+
       // FILE START
       if (
         typeof data === "object" &&
@@ -279,12 +304,28 @@ export function usePeer() {
     }
   }, []);
 
+  const sendClipboard = useCallback((content: string) => {
+    const connection = connectionRef.current;
+
+    if (!connection?.open) {
+      throw new Error("Connection belum open");
+    }
+
+    connection.send({
+      type: "clipboard",
+      id: crypto.randomUUID(),
+      content,
+    });
+  }, []);
+
   return {
     peerId,
     status,
     session,
     connect,
     sendFile,
+    sendClipboard,
     sendingFiles,
+    receivedClipboard,
   };
 }

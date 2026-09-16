@@ -8,8 +8,16 @@ import { ClipboardPicker } from "../components/transfer/ClipboardPicker";
 import { Footer } from "../components/Footer";
 
 export default function HomePage() {
-  const { peerId, status, session, connect, sendFile, sendingFiles } =
-    usePeer();
+  const {
+    peerId,
+    status,
+    session,
+    connect,
+    sendFile,
+    sendClipboard,
+    sendingFiles,
+    receivedClipboard,
+  } = usePeer();
   const [scanning, setScanning] = useState(false);
   const [tokenInput, setTokenInput] = useState("");
   const [activeTab, setActiveTab] = useState<"send" | "receive">("send");
@@ -83,7 +91,10 @@ export default function HomePage() {
                 </div>
                 <FilePicker onSend={sendFile} sendingFiles={sendingFiles} />
                 <hr />
-                <ClipboardPicker />
+                <ClipboardPicker
+                  onSend={sendClipboard}
+                  receivedClipboard={receivedClipboard}
+                />
               </div>
             ) : (
               /* Normal Tab View */
