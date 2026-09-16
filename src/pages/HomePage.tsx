@@ -3,6 +3,9 @@ import { usePeer } from "../hooks/usePeer";
 import { FilePicker } from "../components/transfer/FilePicker";
 import { QrScanner } from "../components/transfer/QrScanner";
 import { TransferQr } from "../components/transfer/TransferQr";
+import { HomeInfoSection } from "../components/HomeInfoSection";
+import { ClipboardPicker } from "../components/transfer/ClipboardPicker";
+import { Footer } from "../components/Footer";
 
 export default function HomePage() {
   const { peerId, status, session, connect, sendFile, sendingFiles } =
@@ -51,222 +54,140 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white">
-      <section
-        aria-labelledby="airtrash-title"
-        className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-        {/* Header */}
-        <header className="flex items-center justify-between pb-6 border-b border-zinc-800">
-          <div>
-            <h1
-              id="airtrash-title"
-              className="text-2xl font-bold tracking-wider text-white">
-              AirTrash: Local P2P File Transfer
-            </h1>
-            <p className="text-xs text-zinc-400">
-              Send files directly between devices
-            </p>
-          </div>
-          {getStatusBadge()}
-        </header>
-
-        {/* Dynamic Connected View */}
-        {status === "connected" ? (
-          <div className="py-6 space-y-4">
-            <div className="p-4 bg-zinc-800/50 rounded-xl border border-zinc-700/50 text-center">
-              <p className="text-sm text-zinc-400">Ready to send File</p>
-            </div>
-            <FilePicker onSend={sendFile} sendingFiles={sendingFiles} />
-          </div>
-        ) : (
-          /* Normal Tab View */
-          <div className="mt-6">
-            <div className="grid grid-cols-2 p-1 bg-zinc-950 rounded-xl mb-6">
-              <button
-                onClick={() => setActiveTab("send")}
-                className={`py-2 text-sm font-medium rounded-lg transition-all ${activeTab === "send" ? "bg-zinc-800 text-white shadow" : "text-zinc-500 hover:text-zinc-300"}`}>
-                Accept (QR Code)
-              </button>
-              <button
-                onClick={() => setActiveTab("receive")}
-                className={`py-2 text-sm font-medium rounded-lg transition-all ${activeTab === "receive" ? "bg-zinc-800 text-white shadow" : "text-zinc-500 hover:text-zinc-300"}`}>
-                Connect (Input)
-              </button>
-            </div>
-
-            {/* TAB SEND / SHOW QR */}
-            {activeTab === "send" && session && (
-              <div className="flex flex-col items-center text-center space-y-4">
+    <>
+      <main className="min-h-screen bg-zinc-950 text-white">
+        <section
+          aria-labelledby="airtrash-title"
+          className="flex min-h-screen flex-col items-center justify-center p-4">
+          <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+            {/* Header */}
+            <header className="flex items-center justify-between pb-6 border-b border-zinc-800">
+              <div>
+                <h1
+                  id="airtrash-title"
+                  className="text-2xl font-bold tracking-wider text-white">
+                  AirTrash: Local P2P File Transfer
+                </h1>
                 <p className="text-xs text-zinc-400">
-                  Show the QR code or share this token with the recipient.
+                  Send files directly between devices
                 </p>
-                <div className="p-4 bg-white rounded-xl shadow-inner">
-                  <TransferQr session={session} />
-                </div>
-
-                <div className="w-full bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-                  <span className="text-xs text-zinc-500 block">
-                    YOUR TOKEN
-                  </span>
-                  <span className="text-2xl font-mono font-bold tracking-widest text-blue-400">
-                    {peerId || "------"}
-                  </span>
-                </div>
               </div>
-            )}
+              {getStatusBadge()}
+            </header>
 
-            {/* TAB RECEIVE / CONNECT */}
-            {activeTab === "receive" && (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-xs text-zinc-400">
-                    Enter Token from Another Device
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Contoh: 8KQ4XM"
-                      value={tokenInput}
-                      onChange={(e) => setTokenInput(e.target.value)}
-                      className="min-w-0 flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 font-mono text-center text-lg uppercase tracking-wider focus:outline-none focus:border-blue-500 transition-all"
-                    />
+            {/* Dynamic Connected View */}
+            {status === "connected" ? (
+              <div className="py-6 space-y-4">
+                <div className="p-4 bg-zinc-800/50 rounded-xl border border-zinc-700/50 text-center">
+                  <p className="text-sm text-zinc-400">Ready to send File</p>
+                </div>
+                <FilePicker onSend={sendFile} sendingFiles={sendingFiles} />
+                <hr />
+                <ClipboardPicker />
+              </div>
+            ) : (
+              /* Normal Tab View */
+              <div className="mt-6">
+                <div className="grid grid-cols-2 p-1 bg-zinc-950 rounded-xl mb-6">
+                  <button
+                    onClick={() => setActiveTab("send")}
+                    className={`py-2 text-sm font-medium rounded-lg transition-all ${activeTab === "send" ? "bg-zinc-800 text-white shadow" : "text-zinc-500 hover:text-zinc-300"}`}>
+                    Accept (QR Code)
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("receive")}
+                    className={`py-2 text-sm font-medium rounded-lg transition-all ${activeTab === "receive" ? "bg-zinc-800 text-white shadow" : "text-zinc-500 hover:text-zinc-300"}`}>
+                    Connect (Input)
+                  </button>
+                </div>
+
+                {/* TAB SEND / SHOW QR */}
+                {activeTab === "send" && session && (
+                  <div className="flex flex-col items-center text-center space-y-4">
+                    <p className="text-xs text-zinc-400">
+                      Show the QR code or share this token with the recipient.
+                    </p>
+                    <div className="p-4 bg-white rounded-xl shadow-inner">
+                      <TransferQr session={session} />
+                    </div>
+
+                    <div className="w-full bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                      <span className="text-xs text-zinc-500 block">
+                        YOUR TOKEN
+                      </span>
+                      <span className="text-2xl font-mono font-bold tracking-widest text-blue-400">
+                        {peerId || "------"}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB RECEIVE / CONNECT */}
+                {activeTab === "receive" && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-xs text-zinc-400">
+                        Enter Token from Another Device
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Contoh: 8KQ4XM"
+                          value={tokenInput}
+                          onChange={(e) => setTokenInput(e.target.value)}
+                          className="min-w-0 flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 font-mono text-center text-lg uppercase tracking-wider focus:outline-none focus:border-blue-500 transition-all"
+                        />
+                        <button
+                          onClick={handleConnect}
+                          className="shrink-0 bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 rounded-xl transition-all">
+                          Connect
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="relative my-4 flex items-center justify-center">
+                      <hr className="w-full border-zinc-800" />
+                      <span className="absolute bg-zinc-900 px-3 text-xs text-zinc-500">
+                        Or
+                      </span>
+                    </div>
+
                     <button
-                      onClick={handleConnect}
-                      className="shrink-0 bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 rounded-xl transition-all">
-                      Connect
+                      onClick={() => setScanning(true)}
+                      className="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium rounded-xl border border-zinc-700/50 transition-all flex items-center justify-center gap-2">
+                      📷 Scan QR Code
                     </button>
                   </div>
-                </div>
+                )}
+              </div>
+            )}
 
-                <div className="relative my-4 flex items-center justify-center">
-                  <hr className="w-full border-zinc-800" />
-                  <span className="absolute bg-zinc-900 px-3 text-xs text-zinc-500">
-                    Or
-                  </span>
+            {/* Modal QR Scanner */}
+            {scanning && (
+              <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-4">
+                <div className="w-full max-w-sm bg-zinc-900 rounded-2xl p-4 space-y-4 border border-zinc-800">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-semibold text-zinc-200">
+                      Point Your Camera at the QR Code
+                    </h3>
+                    <button
+                      onClick={() => setScanning(false)}
+                      className="text-zinc-500 hover:text-white text-sm">
+                      Close
+                    </button>
+                  </div>
+                  <div className="overflow-hidden rounded-xl">
+                    <QrScanner onScan={handleScan} />
+                  </div>
                 </div>
-
-                <button
-                  onClick={() => setScanning(true)}
-                  className="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium rounded-xl border border-zinc-700/50 transition-all flex items-center justify-center gap-2">
-                  📷 Scan QR Code
-                </button>
               </div>
             )}
           </div>
-        )}
+        </section>
 
-        {/* Modal QR Scanner */}
-        {scanning && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-4">
-            <div className="w-full max-w-sm bg-zinc-900 rounded-2xl p-4 space-y-4 border border-zinc-800">
-              <div className="flex justify-between items-center">
-                <h3 className="text-sm font-semibold text-zinc-200">
-                  Point Your Camera at the QR Code
-                </h3>
-                <button
-                  onClick={() => setScanning(false)}
-                  className="text-zinc-500 hover:text-white text-sm">
-                  Close
-                </button>
-              </div>
-              <div className="overflow-hidden rounded-xl">
-                <QrScanner onScan={handleScan} />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-      </section>
-
-      <section
-        aria-labelledby="how-airtrash-works"
-        className="mx-auto max-w-4xl space-y-12 px-6 pb-20 text-zinc-300 sm:px-8">
-        <div className="border-t border-zinc-800 pt-12 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-400">
-            Private, direct file sharing
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Transfer files between your devices without uploading them to cloud storage.
-          </h2>
-          <p className="mx-auto mt-5 max-w-2xl leading-7 text-zinc-400">
-            AirTrash is a local peer-to-peer file transfer tool. Connect two
-            devices with a QR code or a short token, then send files directly
-            through the browser.
-          </p>
-        </div>
-
-        <div>
-          <h2
-            id="how-airtrash-works"
-            className="text-2xl font-bold text-white">
-            How AirTrash works
-          </h2>
-          <ol className="mt-5 grid gap-4 sm:grid-cols-3">
-            <li className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-              <span className="text-sm font-semibold text-blue-400">01</span>
-              <h3 className="mt-2 font-semibold text-white">Open AirTrash</h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                Open AirTrash on both devices you want to connect.
-              </p>
-            </li>
-            <li className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-              <span className="text-sm font-semibold text-blue-400">02</span>
-              <h3 className="mt-2 font-semibold text-white">Connect securely</h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                Scan the QR code or enter the connection token from the other device.
-              </p>
-            </li>
-            <li className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-              <span className="text-sm font-semibold text-blue-400">03</span>
-              <h3 className="mt-2 font-semibold text-white">Choose and send</h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                Select a file and transfer it directly to the connected device.
-              </p>
-            </li>
-          </ol>
-        </div>
-
-        <div className="grid gap-8 border-y border-zinc-800 py-10 sm:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-bold text-white">Why use local P2P transfer?</h2>
-            <p className="mt-3 leading-7 text-zinc-400">
-              It is useful when you need a quick way to move a file between a
-              phone and computer, or between two nearby devices, without first
-              placing the file in a cloud drive.
-            </p>
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-white">No account required</h2>
-            <p className="mt-3 leading-7 text-zinc-400">
-              Start a transfer from the browser. The recipient only needs the
-              QR code or token created for that connection.
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-bold text-white">Frequently asked questions</h2>
-          <div className="mt-5 space-y-4">
-            <details className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-              <summary className="cursor-pointer font-semibold text-white">
-                Does AirTrash upload my file to cloud storage?
-              </summary>
-              <p className="mt-3 text-sm leading-6 text-zinc-400">
-                AirTrash is designed to transfer files directly between the two connected devices rather than requiring a cloud-storage upload first.
-              </p>
-            </details>
-            <details className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-              <summary className="cursor-pointer font-semibold text-white">
-                How do I connect another device?
-              </summary>
-              <p className="mt-3 text-sm leading-6 text-zinc-400">
-                On one device, open the QR code. On the other, scan it or enter the displayed token, then choose a file once the connection is ready.
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
-    </main>
+        <HomeInfoSection />
+      </main>
+      <Footer />
+    </>
   );
 }
